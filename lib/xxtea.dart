@@ -161,7 +161,7 @@ class XXTEA {
     return bytes.sublist(0, length);
   }
 
-  Uint8List encrypt(dynamic data, dynamic key) {
+  Uint8List encrypt(dynamic data, dynamic key, [bool includeLength = false]) {
     if (data is String) data = _toBytes(data);
     if (key is String) key = _toBytes(key);
     if (data == null || data.length == 0) {
@@ -169,7 +169,7 @@ class XXTEA {
     }
     return _toUint8List(
         _encryptUint32List(
-            _toUint32List(data, true), _toUint32List(_fixkey(key), false)),
+            _toUint32List(data, includeLength), _toUint32List(_fixkey(key), false)),
         false);
   }
 
@@ -177,7 +177,7 @@ class XXTEA {
     return base64.encode(encrypt(data, key));
   }
 
-  Uint8List decrypt(dynamic data, dynamic key) {
+  Uint8List decrypt(dynamic data, dynamic key, [bool includeLength = false]) {
     if (data is String) data = base64.decode(data);
     if (key is String) key = _toBytes(key);
     if (data == null || data.length == 0) {
@@ -186,7 +186,7 @@ class XXTEA {
     return _toUint8List(
         _decryptUint32List(
             _toUint32List(data, false), _toUint32List(_fixkey(key), false)),
-        true);
+        includeLength);
   }
 
   String decryptToString(dynamic data, dynamic key) {
